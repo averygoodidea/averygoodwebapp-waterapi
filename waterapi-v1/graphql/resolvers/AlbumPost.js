@@ -4,7 +4,7 @@ console.log('G')
 const AlbumPostsController = {
 	index: () => {
 	    return (new Promise( (resolve, reject) => {
-	    	WaterApi.GetItems({}, (error, response) => {
+	    	WaterApi.GetAlbumPosts({}, (error, response) => {
 	    		resolve(JSON.parse(response.body))
 	    	})
 	    }))
