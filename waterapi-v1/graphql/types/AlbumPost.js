@@ -8,46 +8,46 @@ const {
 	GraphQLList
 } = GraphQL
 console.log('F')
-const InventoryItemType = new GraphQLObjectType({
-	name: 'InventoryItem',
-	description: 'InventoryItem Type, For all item records in DynamoDB',
+const AlbumPostType = new GraphQLObjectType({
+	name: 'AlbumPost',
+	description: 'AlbumPost Type, For all album post records in DynamoDB',
 	fields: () => ({
 		id: {
 			type: GraphQLID,
-			description: 'ID of the item'
+			description: 'ID of the post'
 		},
 		createdAt: {
 			type: GraphQLInt,
-			description: 'when this item was created'
+			description: 'when this post was created'
 		},
 		slugId: {
 			type: GraphQLString,
-			description: 'url-safe slug id of item'
+			description: 'url-safe slug id of post'
 		},
 		title: {
 			type: GraphQLString,
-			description: 'name of the item'
+			description: 'name of the post'
 		},
 		summary: {
 			type: GraphQLString,
-			description: 'summary of the item'
+			description: 'summary of the post'
 		},
 		images: {
 			type: new GraphQLList(GraphQLString),
-			description: 'images of the item'
+			description: 'images of the post'
 		},
 		categories: {
 			type: new GraphQLList(GraphQLString),
-			description: 'categories of the item'
+			description: 'categories of the post'
 		},
 		price: {
 			type: GraphQLInt,
-			description: 'price of the item'
+			description: 'price of the post'
 		},
 		moreInfoUrl: {
 			type: GraphQLString,
-			description: 'external url to learn more about the item'
+			description: 'external url to learn more about the post'
 		}
 	})
 })
-module.exports = InventoryItemType
+module.exports = AlbumPostType

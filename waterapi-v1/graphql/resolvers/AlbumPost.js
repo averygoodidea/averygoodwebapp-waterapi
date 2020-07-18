@@ -1,7 +1,7 @@
 'use strict'
 const WaterApi = require('../../')
 console.log('G')
-const InventoryItemsController = {
+const AlbumPostsController = {
 	index: () => {
 	    return (new Promise( (resolve, reject) => {
 	    	WaterApi.GetItems({}, (error, response) => {
@@ -16,4 +16,4 @@ const InventoryItemsController = {
 	    })
 	}
 }
-module.exports = InventoryItemsController
+module.exports = AlbumPostsController

@@ -5,12 +5,12 @@ const {
 	GraphQLSchema
 } = GraphQL
 console.log('C')
-const InventoryItemQuery = require('./queries/InventoryItem')
+const AlbumPostQuery = require('./queries/AlbumPost')
 const RootQuery = new GraphQLObjectType({
 	name: 'RootQueryType',
 	description: 'This is the default root query provided by our application.',
 	fields: {
-		inventoryItems: InventoryItemQuery.index()
+		albumPosts: AlbumPostQuery.index()
 	}
 })
 module.exports = new GraphQLSchema({

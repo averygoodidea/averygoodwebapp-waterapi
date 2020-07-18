@@ -6,9 +6,9 @@ const mockedEvent = {
 }
 describe('WaterApi', () => {
 	describe('GetFlightPermit', () => {
-		it('should be called once by http method "OPTIONS", resource "/api/1/inventory/items"', () => {
+		it('should be called once by http method "OPTIONS", resource "/api/1/album/posts"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/inventory/items',
+				'resource': '/api/1/album/posts',
 				'httpMethod': 'OPTIONS'
 			})
 			jest.spyOn(WaterApi, 'GetFlightPermit').mockImplementationOnce(() => {})
@@ -18,7 +18,7 @@ describe('WaterApi', () => {
 		})
 		it('should contain Access-Control-Allow-* headers', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/inventory/items',
+				'resource': '/api/1/album/posts',
 				'httpMethod': 'OPTIONS'
 			})
 
@@ -40,52 +40,52 @@ describe('WaterApi', () => {
 			WaterApi.GetFlightPermit(callback)
 		})
 	})
-	describe('GetItems', () => {
-		it('should be called once by http method "GET", resource "/api/1/inventory/items"', () => {
+	describe('GetAlbumPosts', () => {
+		it('should be called once by http method "GET", resource "/api/1/album/posts"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/inventory/items',
+				'resource': '/api/1/album/posts',
 				'httpMethod': 'GET'
 			})
-			jest.spyOn(WaterApi, 'GetItems').mockImplementationOnce( () => {} )
+			jest.spyOn(WaterApi, 'GetAlbumPosts').mockImplementationOnce( () => {} )
 			WaterApiLambda.handler(event, {}, () => {})
-			expect(WaterApi.GetItems).toHaveBeenCalledTimes(1)
-			WaterApi.GetItems.mockRestore()
+			expect(WaterApi.GetAlbumPosts).toHaveBeenCalledTimes(1)
+			WaterApi.GetAlbumPosts.mockRestore()
 		})
 	})
-	describe('CreateItem', () => {
-		it('should be called once by http method "POST", resource "/api/1/admin/inventory/item"', () => {
+	describe('CreateAlbumPost', () => {
+		it('should be called once by http method "POST", resource "/api/1/admin/album/post"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/admin/inventory/item',
+				'resource': '/api/1/admin/album/post',
 				'httpMethod': 'POST'
 			})
-			jest.spyOn(WaterApi, 'CreateItem').mockImplementationOnce( () => {} )
+			jest.spyOn(WaterApi, 'CreateAlbumPost').mockImplementationOnce( () => {} )
 			WaterApiLambda.handler(event, {}, () => {})
-			expect(WaterApi.CreateItem).toHaveBeenCalledTimes(1)
-			WaterApi.CreateItem.mockRestore()
+			expect(WaterApi.CreateAlbumPost).toHaveBeenCalledTimes(1)
+			WaterApi.CreateAlbumPost.mockRestore()
 		})
 	})
-	describe('UpdateItem', () => {
-		it('should be called once by http method "PUT", resource "/api/1/admin/inventory/items/{id}"', () => {
+	describe('UpdateAlbumPost', () => {
+		it('should be called once by http method "PUT", resource "/api/1/admin/album/posts/{id}"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/admin/inventory/items/{id}',
+				'resource': '/api/1/admin/album/posts/{id}',
 				'httpMethod': 'PUT'
 			})
-			jest.spyOn(WaterApi, 'UpdateItem').mockImplementationOnce( () => {} )
+			jest.spyOn(WaterApi, 'UpdateAlbumPost').mockImplementationOnce( () => {} )
 			WaterApiLambda.handler(event, {}, () => {})
-			expect(WaterApi.UpdateItem).toHaveBeenCalledTimes(1)
-			WaterApi.UpdateItem.mockRestore()
+			expect(WaterApi.UpdateAlbumPost).toHaveBeenCalledTimes(1)
+			WaterApi.UpdateAlbumPost.mockRestore()
 		})
 	})
-	describe('DeleteItem', () => {
-		it('should be called once by http method "PUT", resource "/api/1/admin/inventory/items/{id}"', () => {
+	describe('DeleteAlbumPost', () => {
+		it('should be called once by http method "PUT", resource "/api/1/admin/album/posts/{id}"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/admin/inventory/items/{id}',
+				'resource': '/api/1/admin/album/posts/{id}',
 				'httpMethod': 'DELETE'
 			})
-			jest.spyOn(WaterApi, 'DeleteItem').mockImplementationOnce( () => {} )
+			jest.spyOn(WaterApi, 'DeleteAlbumPost').mockImplementationOnce( () => {} )
 			WaterApiLambda.handler(event, {}, () => {})
-			expect(WaterApi.DeleteItem).toHaveBeenCalledTimes(1)
-			WaterApi.DeleteItem.mockRestore()
+			expect(WaterApi.DeleteAlbumPost).toHaveBeenCalledTimes(1)
+			WaterApi.DeleteAlbumPost.mockRestore()
 		})
 	})
 	describe('RequestGraphQL', () => {
@@ -139,9 +139,9 @@ describe('WaterApi', () => {
 			expect(WaterApi.RequestGraphQL).toHaveBeenCalledTimes(1)
 			WaterApi.RequestGraphQL.mockRestore()
 		})
-		it('should be called once by http method "POST", resource "/inventory/admin/magic-link"', () => {
+		it('should be called once by http method "POST", resource "/admin/magic-link"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/inventory/admin/magic-link',
+				'resource': '/api/1/admin/magic-link',
 				'httpMethod': 'POST'
 			})
 			jest.spyOn(WaterApi, 'SendAdminMagicLink').mockImplementationOnce( () => {} )
@@ -149,9 +149,9 @@ describe('WaterApi', () => {
 			expect(WaterApi.SendAdminMagicLink).toHaveBeenCalledTimes(1)
 			WaterApi.SendAdminMagicLink.mockRestore()
 		})
-		it('should be called once by http method "GET", resource "/inventory/admin/hash"', () => {
+		it('should be called once by http method "GET", resource "/admin/hash"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/inventory/admin/hash',
+				'resource': '/api/1/admin/hash',
 				'httpMethod': 'GET'
 			})
 			jest.spyOn(WaterApi, 'VerifyHash').mockImplementationOnce( () => {} )
@@ -159,9 +159,9 @@ describe('WaterApi', () => {
 			expect(WaterApi.VerifyHash).toHaveBeenCalledTimes(1)
 			WaterApi.VerifyHash.mockRestore()
 		})
-		it('should be called once by http method "GET", resource "/admin/inventory/s3/urls"', () => {
+		it('should be called once by http method "GET", resource "/admin/album/s3/urls"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/admin/inventory/s3/urls',
+				'resource': '/api/1/admin/album/s3/urls',
 				'httpMethod': 'GET'
 			})
 			jest.spyOn(WaterApi, 'GetS3UploadUrl').mockImplementationOnce( () => {} )
@@ -169,15 +169,15 @@ describe('WaterApi', () => {
 			expect(WaterApi.GetS3UploadUrl).toHaveBeenCalledTimes(1)
 			WaterApi.GetS3UploadUrl.mockRestore()
 		})
-		it('should be called once by http method "DELETE", resource "/admin/inventory/s3/images"', () => {
+		it('should be called once by http method "DELETE", resource "/admin/album/s3/images"', () => {
 			const event = Object.assign({}, mockedEvent, {
-				'resource': '/api/1/admin/inventory/s3/images',
+				'resource': '/api/1/admin/album/s3/images',
 				'httpMethod': 'DELETE'
 			})
-			jest.spyOn(WaterApi, 'DeleteImages').mockImplementationOnce( () => {} )
+			jest.spyOn(WaterApi, 'DeleteAlbumImages').mockImplementationOnce( () => {} )
 			WaterApiLambda.handler(event, {}, () => {})
-			expect(WaterApi.DeleteImages).toHaveBeenCalledTimes(1)
-			WaterApi.DeleteImages.mockRestore()
+			expect(WaterApi.DeleteAlbumImages).toHaveBeenCalledTimes(1)
+			WaterApi.DeleteAlbumImages.mockRestore()
 		})
 		it('should be called once by http method "DELETE", resource "/admin/cloudfront-cache"', () => {
 			const event = Object.assign({}, mockedEvent, {

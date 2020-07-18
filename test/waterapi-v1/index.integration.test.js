@@ -9,22 +9,22 @@ jest.setTimeout(100000)
 describe('WaterApi', () => {
 	let config
 	let authorizationHash
-	let inventoryItem
+	let albumPost
 	beforeAll( () => {
 		config = getConfig()
 		console.log('environmentUrl: ', config.environmentUrl)
 	})
 	describe('When a user visits the homepage', () => {
-		it('should get all inventory items', async () => {
+		it('should get all album posts', async () => {
 			const { apiKey, environmentUrl } = config
 			const headers = {
 				headers: {
 					'Content-Type': 'application/json'
 				}
 			}
-			const result = await axios.get(`${environmentUrl}/api/1/inventory/items`, headers)
+			const result = await axios.get(`${environmentUrl}/api/1/album/posts`, headers)
 			if (shouldLogResponse) {
-				console.log('GET /api/1/inventory/items', result.data.length)
+				console.log('GET /api/1/album/posts', result.data.length)
 			}
 
 			expect(result.status).toEqual(200)
@@ -46,9 +46,9 @@ describe('WaterApi', () => {
 				'email': config.email,
 				'signInKey': `abc123`
 			}
-			let result = await axios.post(`${environmentUrl}/api/1/inventory/admin/magic-link`, params, headers)
+			let result = await axios.post(`${environmentUrl}/api/1/admin/magic-link`, params, headers)
 			if (shouldLogResponse) {
-				console.log(`POST /api/1/inventory/admin/magic-link`, result.status)
+				console.log(`POST /api/1/admin/magic-link`, result.status)
 			}
 			expect(result.status).toEqual(204)
 			authorizationHash = result.headers['x-amzn-remapped-authorization']
@@ -64,16 +64,16 @@ describe('WaterApi', () => {
 				}
 			}
 			const submittedKey = 'abc123'
-			let result = await axios.get(`${environmentUrl}/api/1/inventory/admin/hash?submittedKey=${submittedKey}`, headers)
+			let result = await axios.get(`${environmentUrl}/api/1/admin/hash?submittedKey=${submittedKey}`, headers)
 			if (shouldLogResponse) {
-				console.log(`GET /api/1/inventory/admin/hash`, result.status)
+				console.log(`GET /api/1/admin/hash`, result.status)
 			}
 			expect(result.status).toEqual(200)
 			expect(result.headers['x-amzn-remapped-authorization']).not.toEqual(authorizationHash)
 			authorizationHash = result.headers['x-amzn-remapped-authorization']
 			console.log(authorizationHash)
 		})
-		it('should post an inventory item', async done => {
+		it('should create an album post', async done => {
 			const { apiKey, environmentUrl } = config
 			const headers = {
 				headers: {
@@ -88,12 +88,11 @@ describe('WaterApi', () => {
 				'summary': 'With it being extremely healthy, relatively inexpensive and easily accessible, canned salmon is the best deal in town.',
 				'categories': [ 'food' ],
 				'price': 45.00,
-				'moreInfoUrl': 'https://www.wildplanetfoods.com/product/wild-sockeye-salmon/',
-				'scriptureAddress': 'Matthew 6:2-8'
+				'moreInfoUrl': 'https://www.wildplanetfoods.com/product/wild-sockeye-salmon/'
 			}
-			let result = await axios.get(`${environmentUrl}/api/1/admin/inventory/s3/urls?amount=${photosToBeUploaded.length}`, headers)
+			let result = await axios.get(`${environmentUrl}/api/1/admin/album/s3/urls?amount=${photosToBeUploaded.length}`, headers)
 			if (shouldLogResponse) {
-				console.log(`GET /api/1/admin/inventory/s3/urls?amount=${photosToBeUploaded.length}`, result.data)
+				console.log(`GET /api/1/admin/album/s3/urls?amount=${photosToBeUploaded.length}`, result.data)
 			}
 			expect(result.status).toEqual(200)
 			expect(Array.isArray(result.data)).toBe(true)
@@ -102,7 +101,7 @@ describe('WaterApi', () => {
 			expect(result.data[0].hasOwnProperty('photoFilename')).toBe(true)
 			// update photo file names 
 			const updatedPhotoFilenames = result.data.map( ({ photoFilename }) => photoFilename )
-			params.images = updatedPhotoFilenames.map( key => `inventory/items/${key}`)
+			params.images = updatedPhotoFilenames.map( key => `album/posts/${key}`)
 			const { renameFiles, resetFiles, paths } = FileRenamer
 			renameFiles(photosToBeUploaded, updatedPhotoFilenames, async filenameToDataMap => {
 				const filenames = Object.keys(filenameToDataMap)
@@ -120,10 +119,12 @@ describe('WaterApi', () => {
 						console.log(err.response.data)
 					})
 				}
-				// post inventory item with s3 photo refrences
-				result = await axios.post(`${environmentUrl}/api/1/admin/inventory/item`, params, headers)
+
+				console.log('B--', headers)
+				// post album post with s3 photo refrences
+				result = await axios.post(`${environmentUrl}/api/1/admin/album/post`, params, headers)
 				if (shouldLogResponse) {
-					console.log(`POST /api/1/admin/inventory/item`, result.status)
+					console.log(`POST /api/1/admin/album/post`, result.status)
 				}
 				expect(result.status).toEqual(200)
 				console.log(authorizationHash)
@@ -131,15 +132,15 @@ describe('WaterApi', () => {
 				expect(result.data.hasOwnProperty('id')).toBe(true)
 				expect(result.data.hasOwnProperty('createdAt')).toBe(true)
 				expect(result.data.hasOwnProperty('slugId')).toBe(true)
-				// store a copy of this inventory item for subsequent testing
-				inventoryItem = Object.assign({}, result.data, {
+				// store a copy of this album post for subsequent testing
+				albumPost = Object.assign({}, result.data, {
 					images: params.images
 				})
-				console.log(inventoryItem)
+				console.log(albumPost)
 				resetFiles( () => done() )
 			})
 		})
-		it('should update an inventory item', async () => {
+		it('should update an album post', async () => {
 			const { apiKey, environmentUrl } = config
 			const headers = {
 				headers: {
@@ -151,13 +152,13 @@ describe('WaterApi', () => {
 			const params = {
 				'summary': "It's so good. With it being extremely healthy, relatively inexpensive and easily accessible, canned salmon is the best deal in town.",
 			}
-			let result = await axios.put(`${environmentUrl}/api/1/admin/inventory/items/${inventoryItem.id}`, params, headers)
+			let result = await axios.put(`${environmentUrl}/api/1/admin/album/posts/${albumPost.id}`, params, headers)
 			if (shouldLogResponse) {
-				console.log(`PUT /api/1/admin/inventory/items/${inventoryItem.id}`, result.data)
+				console.log(`PUT /api/1/admin/album/posts/${albumPost.id}`, result.data)
 			}
 			expect(result.status).toEqual(200)
 		})
-		it('should delete an inventory item', async () => {
+		it('should delete an album post', async () => {
 			const { apiKey, environmentUrl } = config
 			const headers = {
 				headers: {
@@ -166,29 +167,29 @@ describe('WaterApi', () => {
 					'x-api-key': apiKey
 				}
 			}
-			// delete inventory item images off of S3
+			// delete album post images off of S3
 			const getDelimitedStringOfIds = (keys, delimiter) => {
 				let ids = ''
 				keys.forEach( (id, i) => {
-					const key = id.split('inventory/items/')[1].split('.jpg')[0]
+					const key = id.split('album/posts/')[1].split('.jpg')[0]
 					ids += i === 0 ? key : `${delimiter}${key}`
 				})
 				return ids
 			}
-			const ids = getDelimitedStringOfIds(inventoryItem.images, ',')
-			let result = await axios.delete(`${environmentUrl}/api/1/admin/inventory/s3/images?ids=${ids}`, headers)
+			const ids = getDelimitedStringOfIds(albumPost.images, ',')
+			let result = await axios.delete(`${environmentUrl}/api/1/admin/album/s3/images?ids=${ids}`, headers)
 			if (shouldLogResponse) {
-				console.log(`DELETE /api/1/admin/inventory/s3/images?ids=${ids}`, result.data)
+				console.log(`DELETE /api/1/admin/album/s3/images?ids=${ids}`, result.data)
 			}
 			expect(result.status).toEqual(204)
-			// delete inventory items
-			result = await axios.delete(`${environmentUrl}/api/1/admin/inventory/items/${inventoryItem.id}`, headers)
+			// delete album posts
+			result = await axios.delete(`${environmentUrl}/api/1/admin/album/posts/${albumPost.id}`, headers)
 			if (shouldLogResponse) {
-				console.log(`DELETE /api/1/admin/inventory/items/${inventoryItem.id}`, result.data)
+				console.log(`DELETE /api/1/admin/album/posts/${albumPost.id}`, result.data)
 			}
 			expect(result.status).toEqual(204)
 		})
-		it('should post the inventory item again, since the author really wants it up', async done => {
+		it('should post the album post again, since the author really wants it up', async done => {
 			const { apiKey, environmentUrl } = config
 			const headers = {
 				headers: {
@@ -203,12 +204,11 @@ describe('WaterApi', () => {
 				'summary': 'With it being extremely healthy, relatively inexpensive and easily accessible, canned salmon is the best deal in town.',
 				'categories': [ 'food' ],
 				'price': 45.00,
-				'moreInfoUrl': 'https://www.wildplanetfoods.com/product/wild-sockeye-salmon/',
-				'scriptureAddress': 'Matthew 6:2-8'
+				'moreInfoUrl': 'https://www.wildplanetfoods.com/product/wild-sockeye-salmon/'
 			}
-			let result = await axios.get(`${environmentUrl}/api/1/admin/inventory/s3/urls?amount=${photosToBeUploaded.length}`, headers)
+			let result = await axios.get(`${environmentUrl}/api/1/admin/album/s3/urls?amount=${photosToBeUploaded.length}`, headers)
 			if (shouldLogResponse) {
-				console.log(`GET /api/1/admin/inventory/s3/urls?amount=${photosToBeUploaded.length}`, result.data)
+				console.log(`GET /api/1/admin/album/s3/urls?amount=${photosToBeUploaded.length}`, result.data)
 			}
 			expect(result.status).toEqual(200)
 			expect(Array.isArray(result.data)).toBe(true)
@@ -217,7 +217,7 @@ describe('WaterApi', () => {
 			expect(result.data[0].hasOwnProperty('photoFilename')).toBe(true)
 			// update photo file names 
 			const updatedPhotoFilenames = result.data.map( ({ photoFilename }) => photoFilename )
-			params.images = updatedPhotoFilenames.map( key => `inventory/items/${key}`)
+			params.images = updatedPhotoFilenames.map( key => `album/posts/${key}`)
 			const { renameFiles, resetFiles, paths } = FileRenamer
 			renameFiles(photosToBeUploaded, updatedPhotoFilenames, async filenameToDataMap => {
 				const filenames = Object.keys(filenameToDataMap)
@@ -235,10 +235,10 @@ describe('WaterApi', () => {
 						console.log(err.response.data)
 					})
 				}
-				// post inventory item with s3 photo refrences
-				result = await axios.post(`${environmentUrl}/api/1/admin/inventory/item`, params, headers)
+				// post album post with s3 photo refrences
+				result = await axios.post(`${environmentUrl}/api/1/admin/album/post`, params, headers)
 				if (shouldLogResponse) {
-					console.log(`POST /api/1/admin/inventory/item`, result.status)
+					console.log(`POST /api/1/admin/album/post`, result.status)
 				}
 				expect(result.status).toEqual(200)
 				console.log(authorizationHash)
@@ -246,11 +246,11 @@ describe('WaterApi', () => {
 				expect(result.data.hasOwnProperty('id')).toBe(true)
 				expect(result.data.hasOwnProperty('createdAt')).toBe(true)
 				expect(result.data.hasOwnProperty('slugId')).toBe(true)
-				// store a copy of this inventory item for subsequent testing
-				inventoryItem = Object.assign({}, result.data, {
+				// store a copy of this album post for subsequent testing
+				albumPost = Object.assign({}, result.data, {
 					images: params.images
 				})
-				console.log(inventoryItem)
+				console.log(albumPost)
 				resetFiles( () => done() )
 			})
 		})

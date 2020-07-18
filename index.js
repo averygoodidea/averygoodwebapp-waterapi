@@ -6,7 +6,7 @@ exports.handler = function(event, context, callback) {
     
     console.log('A1', event)
 
-    if (resource === '/api/1/inventory/items') {
+    if (resource === '/api/1/album/posts') {
 
         switch (httpMethod) {
 
@@ -18,7 +18,7 @@ exports.handler = function(event, context, callback) {
 
             case 'GET':
 
-                WaterApi.GetItems(event, callback)
+                WaterApi.GetAlbumPosts(event, callback)
 
                 break
         }
@@ -40,7 +40,7 @@ exports.handler = function(event, context, callback) {
                 break
         }
         
-    } else if (resource === '/api/1/inventory/admin/magic-link') {
+    } else if (resource === '/api/1/admin/magic-link') {
 
         switch (httpMethod) {
 
@@ -57,7 +57,7 @@ exports.handler = function(event, context, callback) {
                 break
         }
         
-    } else if (resource === '/api/1/inventory/admin/hash') {
+    } else if (resource === '/api/1/admin/hash') {
 
         switch (httpMethod) {
 
@@ -74,7 +74,7 @@ exports.handler = function(event, context, callback) {
                 break
         }
 
-    } else if (resource === '/api/1/admin/inventory/item') {
+    } else if (resource === '/api/1/admin/album/post') {
 
         switch (httpMethod) {
 
@@ -86,12 +86,12 @@ exports.handler = function(event, context, callback) {
 
             case 'POST':
 
-                WaterApi.CreateItem(event, callback)
+                WaterApi.CreateAlbumPost(event, callback)
 
                 break
         }
 
-    } else if (resource === '/api/1/admin/inventory/items/{id}') {
+    } else if (resource === '/api/1/admin/album/posts/{id}') {
 
         switch (httpMethod) {
 
@@ -103,18 +103,18 @@ exports.handler = function(event, context, callback) {
 
             case 'PUT':
 
-                WaterApi.UpdateItem(event, callback)
+                WaterApi.UpdateAlbumPost(event, callback)
 
                 break
 
             case 'DELETE':
 
-                WaterApi.DeleteItem(event, callback)
+                WaterApi.DeleteAlbumPost(event, callback)
 
                 break
         }
         
-    } else if (resource === '/api/1/admin/inventory/s3/urls') {
+    } else if (resource === '/api/1/admin/album/s3/urls') {
 
         switch (httpMethod) {
 
@@ -131,7 +131,7 @@ exports.handler = function(event, context, callback) {
                 break
         }
 
-    } else if (resource === '/api/1/admin/inventory/s3/images') {
+    } else if (resource === '/api/1/admin/album/s3/images') {
 
         switch (httpMethod) {
 
@@ -143,7 +143,7 @@ exports.handler = function(event, context, callback) {
 
             case 'DELETE':
 
-                WaterApi.DeleteImages(event, callback)
+                WaterApi.DeleteAlbumImages(event, callback)
 
                 break
         }

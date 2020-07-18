@@ -9,7 +9,7 @@ const {
 const app = express()
 app.use( bodyParser.json({ limit: '50mb' }) )
 app.use(
-	'/api/1/inventory/items/graphql',
+	'/api/1/album/posts/graphql',
 	expressGraphQL( () => {
 		return {
 			graphiql: ENVIRONMENT !== 'prod',

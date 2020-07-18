@@ -37,10 +37,10 @@ const GetFlightPermit = (callback) => {
     callback(null, response)
 }
 
-const GetItems = async (event, callback) => {
+const GetAlbumPosts = async (event, callback) => {
     const response = Object.assign({}, defaultResponse)
     const {
-        INVENTORY_ITEMS_TABLE
+        ALBUM_POSTS_TABLE
     } = process.env
     console.log('B')
     var params = {
@@ -48,14 +48,14 @@ const GetItems = async (event, callback) => {
         ExpressionAttributeValues: {
             ':partitionKey': 'published'
         },
-        TableName: INVENTORY_ITEMS_TABLE
+        TableName: ALBUM_POSTS_TABLE
     }
     const dynamo = new AWS.DynamoDB.DocumentClient()
     dynamo.query(params, (err, data) => {
         if (err) {
             responseBody = err
         } else {
-            responseBody = data.Items.map( ({ categories, createdAt, id, images, moreInfoUrl, price, scriptureAddress, slugId, summary, title }) => {
+            responseBody = data.Items.map( ({ categories, createdAt, id, images, moreInfoUrl, price, slugId, summary, title }) => {
                 return {
                     categories,
                     createdAt,
@@ -63,7 +63,6 @@ const GetItems = async (event, callback) => {
                     images,
                     moreInfoUrl,
                     price,
-                    scriptureAddress,
                     slugId,
                     summary,
                     title
@@ -76,7 +75,7 @@ const GetItems = async (event, callback) => {
     })
 }
 
-const CreateItem = async (event, callback) => {
+const CreateAlbumPost = async (event, callback) => {
     //const response = Object.assign({}, defaultResponse)
     if(event.headers['Authorization']) {
         const { signInKey } = decrypt(JSON.parse(event.headers['Authorization']))
@@ -87,7 +86,7 @@ const CreateItem = async (event, callback) => {
             console.log('C', response)
             if( response.statusCode === 200 ) {
                 const {
-                    INVENTORY_ITEMS_TABLE
+                    ALBUM_POSTS_TABLE
                 } = process.env
                 const eventBody = decodeBase64(event.body)
                 console.log('B', eventBody)
@@ -129,10 +128,7 @@ const CreateItem = async (event, callback) => {
                             price,
                             moreInfoUrl
                         },
-                        TableName: INVENTORY_ITEMS_TABLE
-                    }
-                    if (eventBody.scriptureAddress) {
-                        params.Item.scriptureAddress = eventBody.scriptureAddress
+                        TableName: ALBUM_POSTS_TABLE
                     }
                     const dynamo = new AWS.DynamoDB.DocumentClient()
                     dynamo.put(params, (err, data) => {
@@ -145,7 +141,7 @@ const CreateItem = async (event, callback) => {
                                 createdAt,
                                 slugId
                             }
-                            const invalidationPaths = ['/api/1/inventory/items']
+                            const invalidationPaths = ['/api/1/album/posts']
                             invalidateCloudFrontCache(invalidationPaths)
                             // call Gatsby Webhook to rebuild cloud application
                             triggerGatsbyWebhook()
@@ -177,7 +173,7 @@ const CreateItem = async (event, callback) => {
     }
 }
 
-const UpdateItem = async (event, callback) => {
+const UpdateAlbumPost = async (event, callback) => {
     //const response = Object.assign({}, defaultResponse)
     if(event.headers['Authorization']) {
         const { signInKey } = decrypt(JSON.parse(event.headers['Authorization']))
@@ -188,7 +184,7 @@ const UpdateItem = async (event, callback) => {
             console.log('C', response)
             if( response.statusCode === 200 ) {
                 const {
-                    INVENTORY_ITEMS_TABLE
+                    ALBUM_POSTS_TABLE
                 } = process.env
                 console.log('B')
                 const { id } = event.pathParameters
@@ -197,7 +193,7 @@ const UpdateItem = async (event, callback) => {
                         'partitionKey': 'published',
                         id
                     },
-                    TableName: INVENTORY_ITEMS_TABLE
+                    TableName: ALBUM_POSTS_TABLE
                 }
                 const dynamo = new AWS.DynamoDB.DocumentClient()
                 dynamo.get(params, (err, data) => {
@@ -216,8 +212,7 @@ const UpdateItem = async (event, callback) => {
                                 images,
                                 categories,
                                 price,
-                                moreInfoUrl,
-                                scriptureAddress
+                                moreInfoUrl
                             } = decodeBase64(event.body)
                             let UpdateExpression
                             let ExpressionAttributeValues = {}
@@ -235,7 +230,6 @@ const UpdateItem = async (event, callback) => {
                             categories && preparePropToBeUpdated('categories', categories)
                             price && preparePropToBeUpdated('price', price)
                             moreInfoUrl && preparePropToBeUpdated('moreInfoUrl', moreInfoUrl)
-                            scriptureAddress && preparePropToBeUpdated('scriptureAddress', scriptureAddress)
                             console.log('E', UpdateExpression)
                             console.log('F', ExpressionAttributeValues)
                             params = {
@@ -245,14 +239,14 @@ const UpdateItem = async (event, callback) => {
                                 },
                                 UpdateExpression,
                                 ExpressionAttributeValues,
-                                TableName: INVENTORY_ITEMS_TABLE
+                                TableName: ALBUM_POSTS_TABLE
                             }
                             dynamo.update(params, (err, data) => {
                                 if (err) {
                                     responseBody = err
                                 } else {
                                     responseBody = JSON.stringify('success')
-                                    const invalidationPaths = ['/api/1/inventory/items']
+                                    const invalidationPaths = ['/api/1/album/posts']
                                     invalidateCloudFrontCache(invalidationPaths)
                                     // call Gatsby Webhook to rebuild cloud application
                                     triggerGatsbyWebhook()
@@ -285,7 +279,7 @@ const UpdateItem = async (event, callback) => {
     }
 }
 
-const DeleteItem = async (event, callback) => {
+const DeleteAlbumPost = async (event, callback) => {
     //const response = Object.assign({}, defaultResponse)
     if(event.headers['Authorization']) {
         const { signInKey } = decrypt(JSON.parse(event.headers['Authorization']))
@@ -296,7 +290,7 @@ const DeleteItem = async (event, callback) => {
             console.log('C', response)
             if( response.statusCode === 200 ) {
                 const {
-                    INVENTORY_ITEMS_TABLE
+                    ALBUM_POSTS_TABLE
                 } = process.env
                 console.log('B')
                 const { id } = event.pathParameters
@@ -305,7 +299,7 @@ const DeleteItem = async (event, callback) => {
                         'partitionKey': 'published',
                         id
                     },
-                    TableName: INVENTORY_ITEMS_TABLE
+                    TableName: ALBUM_POSTS_TABLE
                 }
                 const dynamo = new AWS.DynamoDB.DocumentClient()
                 dynamo.get(params, (err, data) => {
@@ -323,7 +317,7 @@ const DeleteItem = async (event, callback) => {
                                     response.body = JSON.stringify(err)
                                 } else {
                                     response.statusCode = 204
-                                    const invalidationPaths = ['/api/1/inventory/items']
+                                    const invalidationPaths = ['/api/1/album/posts']
                                     invalidateCloudFrontCache(invalidationPaths)
                                     // call Gatsby Webhook to rebuild cloud application
                                     triggerGatsbyWebhook()
@@ -376,12 +370,12 @@ const SendAdminMagicLink = (event, callback) => {
     // validate email
     if (isValidEmailFormat(email)) {
         if(signInKey) {
-            // get admin email from INVENTORY_ADMINS_TABLE
+            // get admin email from ADMINS_TABLE
             // else
                 // log error
             const {
                 ALLOWED_MAGICLINK_URL,
-                INVENTORY_ADMINS_TABLE,
+                ADMINS_TABLE,
                 SES_SENDER_EMAIL_ADDRESS
             } = process.env
 
@@ -391,9 +385,9 @@ const SendAdminMagicLink = (event, callback) => {
                     'partitionKey': 'published',
                     email
                 },
-                TableName: INVENTORY_ADMINS_TABLE
+                TableName: ADMINS_TABLE
             }
-            // update admin magic link key in INVENTORY_ADMINS_TABLE
+            // update admin magic link key in ADMINS_TABLE
             const dynamo = new AWS.DynamoDB.DocumentClient()
             dynamo.get(params, (err, data) => {
                 if (err) {
@@ -438,7 +432,7 @@ const SendAdminMagicLink = (event, callback) => {
                 }
             })
         } else {
-            console.log('G')
+            console.log('H')
             const errorMessage = `'signInKey' parameter is malformed.`
             response.statusCode = 400
             response.body = JSON.stringify({ error: errorMessage })
@@ -446,7 +440,7 @@ const SendAdminMagicLink = (event, callback) => {
             callback(null, response)
         }
     } else {
-        console.log('H')
+        console.log('I')
         const errorMessage = "'email' parameter is malformed."
         response.statusCode = 400
         response.body = JSON.stringify({ error: errorMessage })
@@ -473,7 +467,7 @@ const VerifyHash = (event, callback) => {
             // else
                 // reject
             const {
-                INVENTORY_ADMINS_TABLE
+                ADMINS_TABLE
             } = process.env
 
             console.log('D')
@@ -482,7 +476,7 @@ const VerifyHash = (event, callback) => {
                     'partitionKey': 'published',
                     email
                 },
-                TableName: INVENTORY_ADMINS_TABLE
+                TableName: ADMINS_TABLE
             }
 
             const dynamo = new AWS.DynamoDB.DocumentClient()
@@ -621,7 +615,7 @@ const GetS3UploadUrl = (event, callback) => {
                     const id = uuidv4()
                     const s3Params = {
                         Bucket: EARTHBUCKET_MEDIA_BUCKET_NAME,
-                        Key:  `inventory/items/${id}.jpg`,
+                        Key:  `album/posts/images/${id}.jpg`,
                         ContentType: 'image/jpeg',
                         ACL: 'public-read',
                     }
@@ -650,7 +644,7 @@ const GetS3UploadUrl = (event, callback) => {
     }
 }
 
-const DeleteImages = (event, callback) => {
+const DeleteAlbumImages = (event, callback) => {
     const response = Object.assign({}, defaultResponse)
     console.log('B')
     // decrypt submitted key and pass it in to verify hash function to forgo submittedKey/signInKey step
@@ -670,7 +664,7 @@ const DeleteImages = (event, callback) => {
                 const s3 = new AWS.S3()
                 const { ids } = event.queryStringParameters
                 if (ids) {
-                    const Objects = ids.split(',').map( id => ({ Key: `inventory/items/${id}.jpg` }))
+                    const Objects = ids.split(',').map( id => ({ Key: `album/posts/images/${id}.jpg` }))
                     s3.deleteObjects({
                         Bucket: EARTHBUCKET_MEDIA_BUCKET_NAME,
                         Delete: {
@@ -806,14 +800,14 @@ const triggerGatsbyWebhook = () => {
 
 module.exports = {
     GetFlightPermit,
-    GetItems,
-    CreateItem,
-    UpdateItem,
-    DeleteItem,
+    GetAlbumPosts,
+    CreateAlbumPost,
+    UpdateAlbumPost,
+    DeleteAlbumPost,
     RequestGraphQL,
     SendAdminMagicLink,
     VerifyHash,
     GetS3UploadUrl,
     DeleteCloudFrontCache,
-    DeleteImages
+    DeleteAlbumImages
 }
