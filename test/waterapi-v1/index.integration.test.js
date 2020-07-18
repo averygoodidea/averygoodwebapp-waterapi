@@ -101,7 +101,7 @@ describe('WaterApi', () => {
 			expect(result.data[0].hasOwnProperty('photoFilename')).toBe(true)
 			// update photo file names 
 			const updatedPhotoFilenames = result.data.map( ({ photoFilename }) => photoFilename )
-			params.images = updatedPhotoFilenames.map( key => `album/posts/${key}`)
+			params.images = updatedPhotoFilenames.map( key => `album/posts/images/${key}`)
 			const { renameFiles, resetFiles, paths } = FileRenamer
 			renameFiles(photosToBeUploaded, updatedPhotoFilenames, async filenameToDataMap => {
 				const filenames = Object.keys(filenameToDataMap)
@@ -171,7 +171,7 @@ describe('WaterApi', () => {
 			const getDelimitedStringOfIds = (keys, delimiter) => {
 				let ids = ''
 				keys.forEach( (id, i) => {
-					const key = id.split('album/posts/')[1].split('.jpg')[0]
+					const key = id.split('album/posts/images/')[1].split('.jpg')[0]
 					ids += i === 0 ? key : `${delimiter}${key}`
 				})
 				return ids
@@ -217,7 +217,7 @@ describe('WaterApi', () => {
 			expect(result.data[0].hasOwnProperty('photoFilename')).toBe(true)
 			// update photo file names 
 			const updatedPhotoFilenames = result.data.map( ({ photoFilename }) => photoFilename )
-			params.images = updatedPhotoFilenames.map( key => `album/posts/${key}`)
+			params.images = updatedPhotoFilenames.map( key => `album/posts/images/${key}`)
 			const { renameFiles, resetFiles, paths } = FileRenamer
 			renameFiles(photosToBeUploaded, updatedPhotoFilenames, async filenameToDataMap => {
 				const filenames = Object.keys(filenameToDataMap)
