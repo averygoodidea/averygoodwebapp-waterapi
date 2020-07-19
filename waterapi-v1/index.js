@@ -142,9 +142,10 @@ const CreateAlbumPost = async (event, callback) => {
                                 slugId
                             }
                             const invalidationPaths = ['/api/1/album/posts']
-                            invalidateCloudFrontCache(invalidationPaths)
-                            // call Gatsby Webhook to rebuild cloud application
-                            triggerGatsbyWebhook()
+                            invalidateCloudFrontCache(invalidationPaths, () => {
+                                // call Gatsby Webhook to rebuild cloud application
+                                triggerGatsbyWebhook()
+                            })
                         }
                         console.log('C', responseBody)
                         response.body = JSON.stringify(responseBody)
@@ -247,9 +248,10 @@ const UpdateAlbumPost = async (event, callback) => {
                                 } else {
                                     responseBody = JSON.stringify('success')
                                     const invalidationPaths = ['/api/1/album/posts']
-                                    invalidateCloudFrontCache(invalidationPaths)
-                                    // call Gatsby Webhook to rebuild cloud application
-                                    triggerGatsbyWebhook()
+                                    invalidateCloudFrontCache(invalidationPaths, () => {
+                                        // call Gatsby Webhook to rebuild cloud application
+                                        triggerGatsbyWebhook()
+                                    })
                                 }
                                 console.log('G', params, responseBody)
                                 response.body = JSON.stringify(responseBody)
@@ -318,9 +320,10 @@ const DeleteAlbumPost = async (event, callback) => {
                                 } else {
                                     response.statusCode = 204
                                     const invalidationPaths = ['/api/1/album/posts']
-                                    invalidateCloudFrontCache(invalidationPaths)
-                                    // call Gatsby Webhook to rebuild cloud application
-                                    triggerGatsbyWebhook()
+                                    invalidateCloudFrontCache(invalidationPaths, () => {
+                                        // call Gatsby Webhook to rebuild cloud application
+                                        triggerGatsbyWebhook()
+                                    })
                                 }
                                 console.log('E', response)
                                 callback(null, response)
@@ -741,7 +744,7 @@ const DeleteCloudFrontCache = (event, callback) => {
     }
 }
 
-const invalidateCloudFrontCache = paths => {
+const invalidateCloudFrontCache = (paths, cb) => {
     const { AIRCDN_DISTRIBUTION_ID } = process.env
     var params = {
         DistributionId: AIRCDN_DISTRIBUTION_ID, /* required */
@@ -759,6 +762,9 @@ const invalidateCloudFrontCache = paths => {
             console.log(err, err.stack)  // an error occurred
         } else {
             console.log(data)            // successful response
+            if(cb) {
+                cb()
+            }
         }
     })
 }
