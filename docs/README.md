@@ -1,4 +1,4 @@
-# WaterApi Documentation
+# A Very Good Web App - WaterApi Documentation
 
 ![WaterAPI Icon](./redoc/img/icon-water.svg)
 
