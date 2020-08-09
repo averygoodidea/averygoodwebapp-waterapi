@@ -63,4 +63,4 @@ npm run test:units
 npm run test:integrations -- --environment=<environment>
 ```
 
-Swagger API Documentation instructions are located at [./docs/README.md](./docs/README.md)
+Swagger API Documentation instructions are located at [./docs/README.md](./docs/)
