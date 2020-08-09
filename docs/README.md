@@ -1,6 +1,6 @@
 # WaterApi Documentation
 
-![WaterAPI Icon](./docs/redoc/img/icon-water.svg)
+![WaterAPI Icon](./redoc/img/icon-water.svg)
 
 Prerequisites
 - [An AWS Account with programmatic permission](https://aws.amazon.com/)
