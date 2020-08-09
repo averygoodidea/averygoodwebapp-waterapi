@@ -86,8 +86,8 @@ describe('WaterApi', () => {
 			const params = {
 				'title': 'Canned Salmon',
 				'summary': 'With it being extremely healthy, relatively inexpensive and easily accessible, canned salmon is the best deal in town.',
-				'categories': [ 'food' ],
-				'price': 45.00,
+				'categories': [ 'firerecord', 'aircdn', 'earthbucket', 'waterapi' ],
+				//'price': 45.00,
 				'moreInfoUrl': 'https://www.wildplanetfoods.com/product/wild-sockeye-salmon/'
 			}
 			let result = await axios.get(`${environmentUrl}/api/1/admin/album/s3/urls?amount=${photosToBeUploaded.length}`, headers)
@@ -202,7 +202,7 @@ describe('WaterApi', () => {
 			const params = {
 				'title': 'Canned Salmon',
 				'summary': 'With it being extremely healthy, relatively inexpensive and easily accessible, canned salmon is the best deal in town.',
-				'categories': [ 'food' ],
+				'categories': [ 'firerecord', 'aircdn', 'earthbucket', 'waterapi' ],
 				'price': 45.00,
 				'moreInfoUrl': 'https://www.wildplanetfoods.com/product/wild-sockeye-salmon/'
 			}

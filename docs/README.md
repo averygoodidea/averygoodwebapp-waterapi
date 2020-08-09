@@ -1,6 +1,6 @@
-# Thallium Eli API Documentation
+# WaterApi Documentation
 
-[![faithinventory-com-thalliumeli badge](https://img.shields.io/badge/faithinventory.com-thalliumeli-%23b88e83?style=for-the-badge&logo=javascript)](https://faithinventory.com/)
+![WaterAPI Icon](./docs/redoc/img/icon-water.svg)
 
 Prerequisites
 - [An AWS Account with programmatic permission](https://aws.amazon.com/)
@@ -10,7 +10,7 @@ The API is documented with Swagger, a documentation tool to help describe the ap
 
 The docs are published at:
 
-https://faithinventory.com/api/1/docs/
+https://averygoodweb.app/api/1/docs/
 
 ## Editing
 

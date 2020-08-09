@@ -55,19 +55,7 @@ const GetAlbumPosts = async (event, callback) => {
         if (err) {
             responseBody = err
         } else {
-            responseBody = data.Items.map( ({ categories, createdAt, id, images, moreInfoUrl, price, slugId, summary, title }) => {
-                return {
-                    categories,
-                    createdAt,
-                    id,
-                    images,
-                    moreInfoUrl,
-                    price,
-                    slugId,
-                    summary,
-                    title
-                }
-            })
+            responseBody = data.Items
         }
         console.log('C', responseBody)
         response.body = JSON.stringify(responseBody)
@@ -96,7 +84,6 @@ const CreateAlbumPost = async (event, callback) => {
                         'summary',
                         'images',
                         'categories',
-                        'price',
                         'moreInfoUrl'
                     ]
                     for (let i = 0; i < keys.length; i++) {
@@ -110,8 +97,8 @@ const CreateAlbumPost = async (event, callback) => {
                         summary,
                         images,
                         categories,
-                        price,
-                        moreInfoUrl
+                        moreInfoUrl,
+                        price
                     } = eventBody
 
                     let responseBody
@@ -125,10 +112,12 @@ const CreateAlbumPost = async (event, callback) => {
                             summary,
                             images,
                             categories,
-                            price,
                             moreInfoUrl
                         },
                         TableName: ALBUM_POSTS_TABLE
+                    }
+                    if (price && typeof price === 'number') {
+                        params.Item.price = price
                     }
                     const dynamo = new AWS.DynamoDB.DocumentClient()
                     dynamo.put(params, (err, data) => {
