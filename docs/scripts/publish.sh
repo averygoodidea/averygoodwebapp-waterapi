@@ -8,8 +8,7 @@ aws s3 sync ./build s3://$AWS_WATERAPI_DOCS_BUCKET --delete --exclude '*.DS_Stor
 CLOUDFRONT_DISTRIBUTION_ID=$(aws cloudformation list-exports --query "Exports[?Name=='${NAMESPACE}-${ENVIRONMENT}-AirCdnDistributionId'].Value" --output text --profile $AWS_PROFILE)
 aws cloudfront create-invalidation --distribution-id $CLOUDFRONT_DISTRIBUTION_ID --paths '/*' --profile $AWS_PROFILE
 [[ $ENVIRONMENT != prod ]] && SUBDOMAIN="$ENVIRONMENT". || SUBDOMAIN=""
-FQDN=${SUBDOMAIN}$DOMAIN_NAME
 echo "------------------"
 echo "${DOMAIN_NAME} api docs published! You can view them here:"
-echo "https://${FQDN}/api/1/docs/"
+echo "https://${DOMAIN_NAME}/api/1/docs/"
 echo "------------------"
