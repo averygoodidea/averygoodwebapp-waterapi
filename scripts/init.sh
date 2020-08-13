@@ -3,9 +3,9 @@ AWS_PROFILE=$2
 # deploy water-api files to aws
 sh ./scripts/deploy.sh $ENVIRONMENT $AWS_PROFILE
 # seed data into water-api
-# > Please note, if the app doesn't have any inventory items, then the specific test:
+# > Please note, if the app doesn't have any album posts, then the specific test:
 # >
-# > "When a user visits the homepage" > "should get all inventory items"
+# > "When a user visits the homepage" > "should get all album posts"
 # >
 # > will always fail because it is looking for items to return.
 # >
