@@ -24,7 +24,7 @@
     "express": "^4.17.1",
     "express-graphql": "^0.9.0",
     "graphql": "^15.0.0",
-    "moment": "^2.24.0",
+    "moment": "^2.29.2",
     "slugid": "^2.0.0",
     "uuid": "^7.0.3"
   }
